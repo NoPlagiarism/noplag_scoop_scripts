@@ -1,0 +1,14 @@
+[project]
+name = "noplag-scripts"
+version = "1.0.0"
+description = ""
+authors = [
+    {name = "NoPlagiarism",email = "37241775+NoPlagiarism@users.noreply.github.com"}
+]
+license = {text = "WTFPL"}
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "gitpython>=3.1.62",
+    "httpx>=0.28.1",
+]
