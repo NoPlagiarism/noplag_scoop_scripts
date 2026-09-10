@@ -11,8 +11,8 @@ MANIFESTS_DICT = {
     "versions": [
         GHNightlyModule(name="nicotine-plus-git", repo="NoPlagiarism/nicotine-plus", workflow_name="packaging.yml",
                         arch_patterns={"64bit": "windows-x86_64-portable", "32bit": "windows-x86_64-portable", "arm64": "windows-arm64-portable"},
-                        branch="temp_nightly",
-                        extra={"description": "Graphical client for the Soulseek file sharing network", "homepage": "https://nicotine-plus.org", "license": "GPL-3.0-or-later", "extract_dir": "Nicotine+", "notes": "This is currently using fork with fully portable working. After code merges, it will use original code", "pre_install": [r'if (!(Test-Path \"$dir\\portable")) { New-Item \"$dir\\portable\" -ItemType Directory | Out-Null }'], "persist": "portable", "shortcuts":[["Nicotine+.exe","Nicotine+"]]})
+                        branch="master",
+                        extra={"description": "Graphical client for the Soulseek file sharing network", "homepage": "https://nicotine-plus.org", "license": "GPL-3.0-or-later", "extract_dir": "Nicotine+", "pre_install": [r'if (!(Test-Path \"$dir\\portable")) { New-Item \"$dir\\portable\" -ItemType Directory | Out-Null }'], "persist": "portable", "shortcuts":[["Nicotine+.exe","Nicotine+"]]})
     ]
 }
 CUR_BUCKET = sys.argv[-1]  # TODO: implement click instead of this
