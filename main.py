@@ -21,7 +21,7 @@ MANIFESTS_DICT = {
 }
 
 @click.command()
-@click.argument("cur_bucket", type=str)
+@click.argument("cur_bucket", type=str, envvar='NSS_CUR_BUCKET')
 @click.option("--dir", type=click.Path(dir_okay=True, file_okay=False, writable=True, readable=True, resolve_path=True), default=PARENT_DIR)
 @click.option("--dry-run", is_flag=True, default=False, flag_value=True)
 def cli(cur_bucket: str, dir, dry_run: bool):
