@@ -70,6 +70,7 @@ class GHNightlyModule(BaseScoopModuleWithExtra):
         last_run = self.find_latest_run()
         if self.curver != self.from_sha_to_ver(last_run["head_sha"]):
             self.state = UpdateState.UPDATE_BUMPED
+            self.newver = self.from_sha_to_ver(last_run["head_sha"])
             return True
         else:
             self.state = UpdateState.CLEAR

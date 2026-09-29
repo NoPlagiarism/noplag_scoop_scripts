@@ -12,6 +12,7 @@ class BaseScoopModule:
     name: str
     state: UpdateState | None
     bucket_dir = None
+    _newver_manual = None
 
     def __str__(self) -> str:
         return f"{self.name} ({type(self).__name__})"
@@ -52,7 +53,11 @@ class BaseScoopModule:
 
     @property
     def newver(self) -> t.Optional[str]:
-        return self.__dict__.get("new", dict()).get("version")
+        return self.__dict__.get("new", dict()).get("version") or self._newver_manual
+    
+    @newver.setter
+    def newver(self, val: str) -> None:
+        self._newver_manual = val
 
     def save_manifest(self, data: dict):
         with open(self.manifest_path, mode="w+", encoding="utf-8") as f:
