@@ -1,6 +1,6 @@
 import os
 
-import httpx
+from httpx2 import Client, URL
 
 from base_module import BaseScoopModuleWithExtra, UpdateState
 
@@ -21,7 +21,7 @@ class GHNightlyModule(BaseScoopModuleWithExtra):
         }
         if gh_token:
             headers["Authorization"] = "Bearer " + gh_token
-        self.client = httpx.Client(headers=headers)
+        self.client = Client(headers=headers)
 
         self._cached_data = dict()
 
@@ -32,7 +32,7 @@ class GHNightlyModule(BaseScoopModuleWithExtra):
     def get_runs(self) -> list[dict]:
         if cached_runs := self._cached_data.get("runs"):
             return cached_runs
-        url = httpx.URL("https://api.github.com/repos/").join(f"{self.repo}/actions/runs")
+        url = URL("https://api.github.com/repos/").join(f"{self.repo}/actions/runs")
         raw_resp = self.client.get(url)
         resp = raw_resp.json()
         self._cached_data["runs"] = resp["workflow_runs"]
@@ -41,7 +41,7 @@ class GHNightlyModule(BaseScoopModuleWithExtra):
     def get_artifacts(self, run_id: int) -> list[dict]:
         if cached_artifacts := self._cached_data.get("artifacts"):
             return cached_artifacts
-        url = httpx.URL("https://api.github.com/repos/").join(f"{self.repo}/actions/runs/{run_id}/artifacts")
+        url = URL("https://api.github.com/repos/").join(f"{self.repo}/actions/runs/{run_id}/artifacts")
         raw_resp = self.client.get(url)
         resp = raw_resp.json()
         self._cached_data["artifacts"] = resp["artifacts"]

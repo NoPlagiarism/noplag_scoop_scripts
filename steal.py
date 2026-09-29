@@ -1,4 +1,4 @@
-import httpx
+import httpx2
 
 from base_module import BaseScoopModule, UpdateState
 # from shared import get_sha256_from_string, get_sha256_from_string_file
@@ -13,7 +13,7 @@ class StealModule(BaseScoopModule):
         self.state = None
 
     def download_new(self) -> None:
-        resp = httpx.get(self.url)
+        resp = httpx2.get(self.url)
         self.new = resp.json()
         self.new_text = resp.text
 
