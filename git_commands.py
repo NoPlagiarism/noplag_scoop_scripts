@@ -2,14 +2,12 @@ import os
 
 from git import Repo, Actor
 
-from shared import ROOT_DIR
-
 import typing as t
 
 
 class Git:
-    def __init__(self) -> None:
-        self.repo = Repo(ROOT_DIR)
+    def __init__(self, git_dir) -> None:
+        self.repo = Repo(git_dir)
 
     def add_n_commit(self, filepath: str | os.PathLike[str], commit_msg: str):
         # TODO: throw away GitPython

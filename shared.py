@@ -3,9 +3,9 @@ from enum import IntEnum
 import hashlib
 from functools import cache
 
-SCRIPTS_DIR = os.path.dirname(__file__)
-ROOT_DIR = os.path.dirname(SCRIPTS_DIR)
-BUCKET_DIR = os.path.join(ROOT_DIR, "bucket")
+ROOT_DIR = os.path.dirname(__file__)
+PARENT_DIR = os.path.dirname(ROOT_DIR)
+DEFAULT_BUCKET_DIR = os.path.join(ROOT_DIR, "bucket")
 
 class UpdateState(IntEnum):
     # REVERT_NEEDED = -3
@@ -42,7 +42,7 @@ def get_sha256_from_file(filepath):
     return digest.hexdigest()
 
 def get_scriptignore_raw():
-    with open(os.path.join(SCRIPTS_DIR, ".scriptignore"), "r", encoding="utf-8") as f:
+    with open(os.path.join(ROOT_DIR, ".scriptignore"), "r", encoding="utf-8") as f:
         lines = f.read().strip("\n").split("\n")
     return lines
 

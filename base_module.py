@@ -3,7 +3,7 @@ import os
 import json
 from functools import cached_property
 
-from shared import BUCKET_DIR, UpdateState, check_scriptignore
+from shared import UpdateState, check_scriptignore
 
 import typing as t
 
@@ -11,9 +11,13 @@ import typing as t
 class BaseScoopModule:
     name: str
     state: UpdateState | None
+    bucket_dir = None
 
     def __str__(self) -> str:
         return f"{self.name} ({type(self).__name__})"
+    
+    def set_dir(self, dir):
+        self.bucket_dir = dir
 
     def check_update(self) -> bool:
         raise NotImplemented
@@ -27,7 +31,7 @@ class BaseScoopModule:
 
     @property
     def manifest_path(self) -> str:
-        return os.path.join(BUCKET_DIR, self.name + ".json")
+        return os.path.join(self.bucket_dir, self.name + ".json")
 
     def exists(self) -> bool:
         return os.path.exists(self.manifest_path)

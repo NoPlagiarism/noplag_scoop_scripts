@@ -1,5 +1,9 @@
+from shared import PARENT_DIR
+from git.index import typ
 import os
 import sys
+
+import click
 
 from shared import COMMIT_MESSAGES
 from steal import StealModule
@@ -15,27 +19,38 @@ MANIFESTS_DICT = {
                         extra={"description": "Graphical client for the Soulseek file sharing network", "homepage": "https://nicotine-plus.org", "license": "GPL-3.0-or-later", "extract_dir": "Nicotine+", "pre_install": [r'if (!(Test-Path \"$dir\\portable")) { New-Item \"$dir\\portable\" -ItemType Directory | Out-Null }'], "persist": "portable", "shortcuts":[["Nicotine+.exe","Nicotine+"]]})
     ]
 }
-CUR_BUCKET = sys.argv[-1]  # TODO: implement click instead of this
-MANIFESTS = MANIFESTS_DICT[CUR_BUCKET]
 
-
-def main():
+@click.command()
+@click.argument("cur_bucket", type=str)
+@click.option("--dir", type=click.Path(dir_okay=True, file_okay=False, writable=True, readable=True, resolve_path=True), default=PARENT_DIR)
+@click.option("--dry-run", is_flag=True, default=False, flag_value=True)
+def cli(cur_bucket: str, dir, dry_run: bool):
     # TODO: async
-    print(f"Current bucket: {CUR_BUCKET}")
-    git = Git()
-    for manifest in MANIFESTS:
+    click.echo(f"Current bucket: {cur_bucket}")
+    bucket_dir = os.path.join(dir, "bucket")
+    manifests = MANIFESTS_DICT[cur_bucket]
+    git = None
+    if not dry_run:
+        git = Git(git_dir=dir)
+    else:
+        click.echo("Dry run is on, no actual git commits will be made")
+    for manifest in manifests:
+        manifest.set_dir(bucket_dir)
         # TODO: actual logging needed LOL
-        print(f"Checking {manifest} for updates")
+        click.echo(f"Checking {manifest} for updates")
         if manifest.check_update():
-            print(f"Found update for {manifest} ({manifest.state})")
+            click.echo(f"Found update for {manifest} ({manifest.state})")
             manifest.update()
             assert manifest.state is not None
             commit_msg = COMMIT_MESSAGES[manifest.state].format(name=manifest.name, curver=manifest.curver, newver=manifest.newver)
-            git.add_n_commit(manifest.manifest_path, commit_msg=commit_msg)
+            if not dry_run:
+                git.add_n_commit(manifest.manifest_path, commit_msg=commit_msg)
+            else:
+                click.echo(f"Tried to commit '{commit_msg}'")
         else:
-            print(f"No updates for {manifest} found")
+            click.echo(f"No updates for {manifest} found")
         # TODO: Implement reverting from .scriptignore here
 
 
 if __name__ == "__main__":
-    main()
+    cli()
