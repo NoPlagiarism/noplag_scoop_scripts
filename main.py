@@ -1,5 +1,4 @@
 from shared import PARENT_DIR
-from git.index import typ
 import os
 import sys
 
@@ -8,10 +7,17 @@ import click
 from shared import COMMIT_MESSAGES
 from steal import StealModule
 from gh_nightly import GHNightlyModule
+from github_module import GHModule
+from reportable_submodule import RePortableSub
 from git_commands import Git
 
 MANIFESTS_DICT = {
-    "main": [StealModule("fagram", "https://raw.githubusercontent.com/fagramdesktop/fagram-scoop/refs/heads/main/fagram.json")],
+    "main": [
+        StealModule("fagram", "https://raw.githubusercontent.com/fagramdesktop/fagram-scoop/refs/heads/main/fagram.json"),
+        GHModule(name="bt-reportable", repo="aloneguid/bt", arch_patterns={"64bit": "win64.msi"},
+                extra={"description": "Opens required browser based on configuration", "homepage": "https://www.aloneguid.uk/projects/bt/", "bin": "bt.exe", "shortcuts": [["bt.exe", "Browser Tamer"]], "persist": "appdata", "license": "Apache-2.0", "extract_dir": "LocalApp/BrowserTamer"},
+                ).sub((RePortableSub, {"redirects": [["$env:AppData\\Browser Tamer", "$persist_dir\\appdata"]]}))
+    ],
     "versions": [
         GHNightlyModule(name="nicotine-plus-git", repo="NoPlagiarism/nicotine-plus", workflow_name="packaging.yml",
                         arch_patterns={"64bit": "windows-x86_64-portable", "32bit": "windows-x86_64-portable", "arm64": "windows-arm64-portable"},
