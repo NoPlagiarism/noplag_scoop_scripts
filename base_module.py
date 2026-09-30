@@ -82,7 +82,7 @@ class BaseScoopModule:
 
 
 class BaseScoopSubmodule:
-    parent: BaseScoopSubmodule
+    parent: BaseScoopModule
 
     def __init__(self, parent):
         self.parent = parent
