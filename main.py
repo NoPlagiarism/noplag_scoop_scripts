@@ -15,7 +15,7 @@ MANIFESTS_DICT = {
     "main": [
         StealModule("fagram", "https://raw.githubusercontent.com/fagramdesktop/fagram-scoop/refs/heads/main/fagram.json"),
         GHModule(name="bt-reportable", repo="aloneguid/bt", arch_patterns={"64bit": "win64.msi"},
-                extra={"description": "Opens required browser based on configuration. (RePortable with dll injecting)", "homepage": "https://www.aloneguid.uk/projects/bt/", "bin": "bt.exe", "shortcuts": [["bt.exe", "Browser Tamer"]], "persist": "appdata", "license": "Apache-2.0", "extract_dir": "LocalApp/BrowserTamer", "notes": ["Icon for shortcut is not supported yet. You can set it yourself using icon from original exe file"]},
+                extra={"description": "Opens required browser baed on configuration. (RePortable with dll injecting)", "homepage": "https://www.aloneguid.uk/projects/bt/", "bin": "bt.exe", "shortcuts": [["bt.exe", "Browser Tamer"]], "persist": "appdata", "license": "Apache-2.0", "extract_dir": "LocalApp/BrowserTamer", "notes": ["Icon for shortcut is not supported yet. You can set it yourself using icon from original exe file", "You also need to setup browser yourself. Maybe through registry, especially on Win11 due to so-called 'Compatibility Assistant'"]},
                 ).sub((RePortableSub, {"redirects": [["$env:AppData\\Browser Tamer", "$persist_dir\\appdata"]]}))
     ],
     "versions": [
