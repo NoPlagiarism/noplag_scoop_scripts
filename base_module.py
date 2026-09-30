@@ -13,9 +13,20 @@ class BaseScoopModule:
     state: UpdateState | None
     bucket_dir = None
     _newver_manual = None
+    submodules = None
+    extra: dict = dict()
 
     def __str__(self) -> str:
         return f"{self.name} ({type(self).__name__})"
+    
+    def sub(self, submodule):
+        if not self.submodules:
+            self.submodules = list()
+        if isinstance(submodule, (tuple, list)):
+            self.submodules.append(submodule[0](parent=self, **submodule[1]))
+        else:
+            self.submodules.append(submodule(parent=self))
+        return self
     
     def set_dir(self, dir):
         self.bucket_dir = dir
@@ -59,15 +70,25 @@ class BaseScoopModule:
     def newver(self, val: str) -> None:
         self._newver_manual = val
 
-    def save_manifest(self, data: dict):
+    def save_manifest(self, data: dict, *, inject_extra: bool = True):
+        if inject_extra:
+            data = self.extra | data
+        if self.submodules:
+            for x in self.submodules:
+                data = x.edit_manifest(data)
         with open(self.manifest_path, mode="w+", encoding="utf-8") as f:
             json.dump(data, f, ensure_ascii=False, indent=4)
             f.write("\n")
 
-class BaseScoopModuleWithExtra(BaseScoopModule):
-    extra: dict
 
-    def save_manifest(self, data: dict, *, inject_extra: bool = True):
-        if inject_extra:
-            data = self.extra | data
-        super().save_manifest(data)
+class BaseScoopSubmodule:
+    parent: BaseScoopSubmodule
+
+    def __init__(self, parent):
+        self.parent = parent
+
+    def check_update(self) -> bool:
+        raise NotImplemented
+    
+    def edit_manifest(self, manifest_data: dict) -> dict:
+        raise NotImplemented

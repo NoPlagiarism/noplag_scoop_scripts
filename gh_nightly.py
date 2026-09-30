@@ -2,9 +2,9 @@ import os
 
 from httpx2 import Client, URL
 
-from base_module import BaseScoopModuleWithExtra, UpdateState
+from base_module import BaseScoopModule, UpdateState
 
-class GHNightlyModule(BaseScoopModuleWithExtra):
+class GHNightlyModule(BaseScoopModule):
     def __init__(self, name: str, repo: str, workflow_name: str, arch_patterns: dict[str, str], extra: dict, branch = None):
         self.name = name
         self.repo = repo
